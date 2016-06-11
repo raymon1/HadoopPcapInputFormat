@@ -142,36 +142,36 @@ public class PcapInputFormat extends FileInputFormat<LongWritable, Text> {
                   bytesRemaining -= 24;
                 }                        
                 int len = 0;
-
+   
                 if(in.available() > 0)
                 {
-                  //bigEndian
+                  //Bigendian reading
                   in.seek(pos + 8);
                   len = in.readInt();
-                  // little endian reading 
+                  // little endian reading
                   // byte[] buffer = new byte[4];
                   // ByteBuffer byteBuffer = ByteBuffer.allocate(4);
                   // in.read(pos+8,buffer, 0, 4);
                   // byteBuffer = ByteBuffer.wrap(buffer);
                   // len = byteBuffer.order(ByteOrder.LITTLE_ENDIAN).getInt();
                   pos += len + 16;
-                  in.seek(pos);
+                  // in.seek(pos);
                 }
                 while(in.available() > 0)
                 {
                   //bigendian
                   in.seek(pos + 8);
                   len = in.readInt();
-                  //littleEndian                 
+                  //littleEndian
                   // byte[] buffer = new byte[4];
                   // ByteBuffer byteBuffer = ByteBuffer.allocate(4);
                   // in.read(pos+8,buffer, 0, 4);
                   // byteBuffer = ByteBuffer.wrap(buffer);
-                  //len = byteBuffer.order(ByteOrder.LITTLE_ENDIAN).getInt();
+                  // len = byteBuffer.order(ByteOrder.LITTLE_ENDIAN).getInt();
                   if ((double) pos + len + 16 - start > splitSize * 1.1)
                     break;
                   pos += len + 16;
-                  in.seek(pos);
+                  // in.seek(pos);
                 }
                 /////////////////////////////
 

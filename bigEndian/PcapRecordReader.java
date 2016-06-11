@@ -83,10 +83,11 @@ public class PcapRecordReader implements RecordReader<LongWritable, Text> {
 
     public String parsePacket(byte [] buf)
     {
+        String result = "";
         //time
         //big endian
-        long seconds1 = toSeconds(new byte[]{buf[0], buf[1], buf[2], buf[3]}) ;
-        long microseconds = toSeconds(new byte[]{buf[4], buf[5], buf[6], buf[7]}) / 1000000;   
+        long seconds1 = toInt(new byte[]{buf[0], buf[1], buf[2], buf[3]}) ;
+        long microseconds = toInt(new byte[]{buf[4], buf[5], buf[6], buf[7]}) / 1000000;   
         
         //little Endian
         // long seconds1 = toInt(new byte[]{buf[3], buf[2], buf[1], buf[0]}) ;
@@ -110,11 +111,10 @@ public class PcapRecordReader implements RecordReader<LongWritable, Text> {
                         + Integer.toString((int)buf[offset+6] & 0xFF) + "."
                         + Integer.toString((int)buf[offset+7] & 0xFF);
 
-        String sourcePort ="-";
-        String destPort ="-";                                                                      
+        String sourcePort ="0";
+        String destPort ="0";                                                                      
         offset = ihl*4 + 16 + 14;
-        // 6 for TCP, 17 for UDP
-        if((protocol.equals("6") || protocol.equals("17")) & offset < buf.length)
+        if((protocol.equals("6") || protocol.equals("17")) && offset + 3 < buf.length )
         {
             long x = toInt( new byte[]{(byte)0,(byte)0,buf[offset], buf[offset+1]});//((byte)0,(byte)0,buf[offset], buf[offset+1]) ;
             sourcePort = Long.toString(x);
