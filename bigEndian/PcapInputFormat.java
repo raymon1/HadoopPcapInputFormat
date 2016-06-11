@@ -142,28 +142,32 @@ public class PcapInputFormat extends FileInputFormat<LongWritable, Text> {
                   bytesRemaining -= 24;
                 }                        
                 int len = 0;
-                // little endian reading 
+
                 if(in.available() > 0)
                 {
-                  // in.seek(pos + 8);
-                  byte[] buffer = new byte[4];
-                  ByteBuffer byteBuffer = ByteBuffer.allocate(4);
-                  in.read(pos+8,buffer, 0, 4);
-                  byteBuffer = ByteBuffer.wrap(buffer);
-                  len = byteBuffer.order(ByteOrder.LITTLE_ENDIAN).getInt();
+                  //bigEndian
+                  in.seek(pos + 8);
+                  len = in.readInt();
+                  // little endian reading 
+                  // byte[] buffer = new byte[4];
+                  // ByteBuffer byteBuffer = ByteBuffer.allocate(4);
+                  // in.read(pos+8,buffer, 0, 4);
+                  // byteBuffer = ByteBuffer.wrap(buffer);
+                  // len = byteBuffer.order(ByteOrder.LITTLE_ENDIAN).getInt();
                   pos += len + 16;
                   in.seek(pos);
                 }
                 while(in.available() > 0)
                 {
-                  //in.seek(pos + 8);
-                  //len = in.readInt();
-                  byte[] buffer = new byte[4];
-                  ByteBuffer byteBuffer = ByteBuffer.allocate(4);
-                  //in.read(buffer);
-                  in.read(pos+8,buffer, 0, 4);
-                  byteBuffer = ByteBuffer.wrap(buffer);
-                  len = byteBuffer.order(ByteOrder.LITTLE_ENDIAN).getInt();
+                  //bigendian
+                  in.seek(pos + 8);
+                  len = in.readInt();
+                  //littleEndian                 
+                  // byte[] buffer = new byte[4];
+                  // ByteBuffer byteBuffer = ByteBuffer.allocate(4);
+                  // in.read(pos+8,buffer, 0, 4);
+                  // byteBuffer = ByteBuffer.wrap(buffer);
+                  //len = byteBuffer.order(ByteOrder.LITTLE_ENDIAN).getInt();
                   if ((double) pos + len + 16 - start > splitSize * 1.1)
                     break;
                   pos += len + 16;

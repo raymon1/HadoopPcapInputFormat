@@ -58,15 +58,15 @@ public class PcapRecordReader implements RecordReader<LongWritable, Text> {
         k.set(packetCount);
 
         // big endian    
-        // baseStream.seek(index+8);
-        // int packet_length = baseStream.readInt();
+        baseStream.seek(index+8);
+        int packet_length = baseStream.readInt();
 
         // little endian
-        byte[] buffer = new byte[4];
-        ByteBuffer byteBuffer = ByteBuffer.allocate(4);
-        baseStream.read(index + 8, buffer, 0, 4);
-        byteBuffer = ByteBuffer.wrap(buffer);
-        int packet_length = byteBuffer.order(ByteOrder.LITTLE_ENDIAN).getInt();
+        // byte[] buffer = new byte[4];
+        // ByteBuffer byteBuffer = ByteBuffer.allocate(4);
+        // baseStream.read(index + 8, buffer, 0, 4);
+        // byteBuffer = ByteBuffer.wrap(buffer);
+        // int packet_length = byteBuffer.order(ByteOrder.LITTLE_ENDIAN).getInt();
         //
 
         byte[] packet_buf = new byte[packet_length + 16 ];
@@ -83,15 +83,14 @@ public class PcapRecordReader implements RecordReader<LongWritable, Text> {
 
     public String parsePacket(byte [] buf)
     {
-        String result = "";
         //time
         //big endian
-        // long seconds1 = toSeconds(new byte[]{buf[0], buf[1], buf[2], buf[3]}) ;
-        // long microseconds = toSeconds(new byte[]{buf[4], buf[5], buf[6], buf[7]}) / 1000000;   
+        long seconds1 = toSeconds(new byte[]{buf[0], buf[1], buf[2], buf[3]}) ;
+        long microseconds = toSeconds(new byte[]{buf[4], buf[5], buf[6], buf[7]}) / 1000000;   
         
         //little Endian
-        long seconds1 = toInt(new byte[]{buf[3], buf[2], buf[1], buf[0]}) ;
-        long microseconds =  toInt(new byte[]{buf[7], buf[6], buf[5], buf[4]});
+        // long seconds1 = toInt(new byte[]{buf[3], buf[2], buf[1], buf[0]}) ;
+        // long microseconds =  toInt(new byte[]{buf[7], buf[6], buf[5], buf[4]});
         seconds1 = seconds1 + microseconds / 1000000;
         String seconds = Long.toString(seconds1);
 
